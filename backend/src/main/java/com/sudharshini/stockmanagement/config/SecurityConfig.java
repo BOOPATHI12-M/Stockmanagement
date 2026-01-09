@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,39 +36,87 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
     
+    /**
+     * Configure WebSecurity to ignore static resources
+     * These resources bypass Spring Security entirely (no filters run)
+     */
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring()
+                .requestMatchers("/favicon.ico")
+                .requestMatchers("/robots.txt")
+                .requestMatchers("/static/**")
+                .requestMatchers("/css/**")
+                .requestMatchers("/js/**")
+                .requestMatchers("/images/**")
+                .requestMatchers("/webjars/**");
+    }
+    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            // Disable CSRF for stateless REST API
             .csrf(csrf -> csrf.disable())
+            
+            // Enable CORS
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            
+            // Stateless session management (no sessions, JWT only)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            
+            // Configure authorization rules
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/admin/login").permitAll() // Allow login for admin and delivery man
-                .requestMatchers("/api/auth/admin/proof-documents/**").authenticated() // Allow authenticated users to view proof documents
-                .requestMatchers("/api/auth/admin/**").hasRole("ADMIN") // Other admin-only auth endpoints
-                .requestMatchers("/api/auth/**").permitAll() // Public auth endpoints (profile endpoints require auth via JWT filter)
-                .requestMatchers("/api/products").permitAll()
-                .requestMatchers("/api/products/images/**").permitAll()
-                .requestMatchers("/api/products/upload").authenticated()
-                .requestMatchers("/api/auth/profile/photo/**").permitAll() // Allow public access to profile photos
-                .requestMatchers("/api/reviews/product/**").permitAll() // Allow public access to view reviews
-                .requestMatchers("/api/reviews/**").authenticated() // Require auth for adding/deleting reviews
-                .requestMatchers("/api/cart/**").authenticated()
-                // Public tracking endpoints - must be before /api/orders/** to match first
+                // Public endpoints - no authentication required
+                .requestMatchers("/").permitAll() // Root path for health check
+                .requestMatchers("/health").permitAll() // Health check endpoint
+                .requestMatchers("/actuator/health").permitAll() // Spring Boot Actuator health
+                .requestMatchers("/error").permitAll() // Error pages
+                .requestMatchers("/favicon.ico").permitAll() // Favicon
+                
+                // OAuth endpoints (if using OAuth2)
+                .requestMatchers("/oauth2/**").permitAll()
+                .requestMatchers("/login/oauth2/**").permitAll()
+                
+                // Public authentication endpoints
+                .requestMatchers("/api/auth/admin/login").permitAll() // Admin login
+                .requestMatchers("/api/auth/**").permitAll() // All auth endpoints (login, register, etc.)
+                
+                // Public product endpoints
+                .requestMatchers("/api/products").permitAll() // List products
+                .requestMatchers("/api/products/*").permitAll() // Get product by ID (single level)
+                .requestMatchers("/api/products/images/**").permitAll() // Product images
+                
+                // Public profile photo access
+                .requestMatchers("/api/auth/profile/photo/**").permitAll()
+                
+                // Public review endpoints (view only)
+                .requestMatchers("/api/reviews/product/**").permitAll() // View product reviews
+                
+                // Public tracking endpoints
                 .requestMatchers("/api/orders/*/tracking").permitAll()
-                // Location tracking is public (like tracking) - must be before /api/orders/** to match first
                 .requestMatchers("/api/orders/*/location-tracking").permitAll()
-                .requestMatchers("/api/orders/by-order-number/**").permitAll() // Public tracking
-                .requestMatchers("/api/orders/by-tracking-id/**").permitAll() // Public tracking
-                .requestMatchers("/api/orders/all").hasRole("ADMIN") // Admin only - get all orders
+                .requestMatchers("/api/orders/by-order-number/**").permitAll()
+                .requestMatchers("/api/orders/by-tracking-id/**").permitAll()
+                
+                // Protected endpoints - require authentication
+                .requestMatchers("/api/products/upload").authenticated() // Upload product image
+                .requestMatchers("/api/reviews/**").authenticated() // Add/delete reviews
+                .requestMatchers("/api/cart/**").authenticated() // Cart operations
                 .requestMatchers("/api/orders/customer/me").authenticated() // User's own orders
+                .requestMatchers("/api/orders/**").authenticated() // Other order endpoints
+                
+                // Role-based endpoints
+                .requestMatchers("/api/orders/all").hasRole("ADMIN") // Admin only
                 .requestMatchers("/api/orders/customer/**").hasRole("ADMIN") // Admin viewing customer orders
-                .requestMatchers("/api/orders/**").authenticated() // Other order endpoints require auth
-                .requestMatchers("/api/delivery/**").hasAnyRole("DELIVERY_MAN", "ADMIN") // Delivery man or admin
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/error").permitAll()
+                .requestMatchers("/api/delivery/**").hasAnyRole("DELIVERY_MAN", "ADMIN") // Delivery or admin
+                .requestMatchers("/api/admin/**").hasRole("ADMIN") // Admin only
+                .requestMatchers("/api/auth/admin/**").hasRole("ADMIN") // Admin auth endpoints
+                .requestMatchers("/api/auth/admin/proof-documents/**").authenticated() // View proof documents
+                
+                // All other requests require authentication
                 .anyRequest().authenticated()
             )
+            // Add JWT filter before UsernamePasswordAuthenticationFilter
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         
         return http.build();

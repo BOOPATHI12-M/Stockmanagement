@@ -30,16 +30,34 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         
-        // Skip JWT validation for public auth endpoints and OPTIONS requests
-        // But allow admin auth endpoints to go through JWT validation
+        // Skip JWT validation for public endpoints and OPTIONS requests
         String path = request.getRequestURI();
+        
+        // Skip OPTIONS requests (CORS preflight)
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             chain.doFilter(request, response);
             return;
         }
         
+        // Skip JWT validation for public root and health endpoints
+        if (path.equals("/") || path.equals("/health") || path.equals("/actuator/health")) {
+            chain.doFilter(request, response);
+            return;
+        }
+        
+        // Skip JWT validation for error pages and favicon
+        if (path.equals("/error") || path.equals("/favicon.ico") || path.startsWith("/favicon")) {
+            chain.doFilter(request, response);
+            return;
+        }
+        
+        // Skip JWT validation for OAuth endpoints
+        if (path.startsWith("/oauth2/") || path.startsWith("/login/oauth2/")) {
+            chain.doFilter(request, response);
+            return;
+        }
+        
         // Skip JWT validation for public auth endpoints (including admin login)
-        // Check for admin login first (more specific)
         if (path.equals("/api/auth/admin/login")) {
             chain.doFilter(request, response);
             return;
