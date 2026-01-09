@@ -1,0 +1,65 @@
+# Maven
+target/
+.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+.project
+.classpath
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+!README.md
+
+# Scripts (not needed in container)
+*.sh
+*.bat
+*.ps1
+
+# Logs
+*.log
+logs/
+
+# Database files (will be created at runtime)
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Uploads (will be created at runtime)
+uploads/
+
+# Test files
+src/test/
+
+# Build artifacts (except the final JAR)
+target/classes/
+target/generated-sources/
+target/maven-archiver/
+target/maven-status/
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Secrets (never include in Docker image!)
+**/credentials.json
+**/*secret*
+**/*password*
+**/*key*
+

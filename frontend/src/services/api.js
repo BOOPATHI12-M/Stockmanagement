@@ -1,11 +1,15 @@
 import axios from 'axios'
 
 // Use environment variable for API URL in production (Render)
-// In development, use Vite proxy or localhost
+// VITE_API_URL should be set in .env.production or Render environment variables
+// In development, use Vite proxy (/api) which proxies to localhost:8080
 const API_BASE_URL = import.meta.env.VITE_API_URL || 
-  (import.meta.env.DEV ? '/api' : 'http://localhost:8080/api')
+  (import.meta.env.DEV ? '/api' : 'https://stockmanagement-802q.onrender.com/api')
 
+// Log API URL for debugging (check browser console)
 console.log('🔗 [API] Base URL:', API_BASE_URL)
+console.log('🔗 [API] Environment:', import.meta.env.MODE)
+console.log('🔗 [API] VITE_API_URL:', import.meta.env.VITE_API_URL || 'not set')
 
 const api = axios.create({
   baseURL: API_BASE_URL,
