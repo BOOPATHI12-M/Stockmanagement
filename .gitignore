@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+backend/target/
+backend/.mvn/
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Database
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+stock_management.db
+
+# Uploads (if not using external storage)
+uploads/
+backend/uploads/
+
+# Build outputs
+frontend/dist/
+frontend/build/
+
+# Maven
+backend/.mvn/wrapper/maven-wrapper.jar
+
+# Secrets (never commit!)
+**/credentials.json
+**/*secret*
+**/*password*
+**/*key*

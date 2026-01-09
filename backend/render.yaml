@@ -1,0 +1,45 @@
+services:
+  # Backend Service
+  - type: web
+    name: sudharshini-stock-backend
+    env: java
+    buildCommand: cd backend && ./mvnw clean package -DskipTests
+    startCommand: cd backend && java -jar target/stock-management-1.0.0.jar --spring.profiles.active=production
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+      - key: DB_PATH
+        value: /tmp/stock_management.db
+      - key: CORS_ORIGINS
+        sync: false  # Set this in Render dashboard to your frontend URL
+      - key: JWT_SECRET
+        generateValue: true  # Generate a secure random secret
+      - key: MAIL_USERNAME
+        sync: false  # Set in Render dashboard
+      - key: MAIL_PASSWORD
+        sync: false  # Set in Render dashboard
+      - key: GOOGLE_CLIENT_ID
+        sync: false  # Set in Render dashboard
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false  # Set in Render dashboard
+      - key: GOOGLE_MAPS_API_KEY
+        sync: false  # Set in Render dashboard
+      - key: GOOGLE_SHEETS_CREDENTIALS_PATH
+        sync: false  # Set in Render dashboard if using Google Sheets
+      - key: GOOGLE_SHEETS_SPREADSHEET_ID
+        sync: false  # Set in Render dashboard if using Google Sheets
+
+  # Frontend Service
+  - type: web
+    name: sudharshini-stock-frontend
+    env: node
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && npm run preview
+    envVars:
+      - key: VITE_API_URL
+        sync: false  # Set to your backend URL, e.g., https://sudharshini-stock-backend.onrender.com
+      - key: NODE_ENV
+        value: production
+

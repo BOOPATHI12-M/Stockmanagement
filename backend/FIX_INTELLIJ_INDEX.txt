@@ -1,0 +1,56 @@
+FIX FOR "Cannot resolve symbol" ERRORS IN INTELLIJ IDEA
+========================================================
+
+All source files exist and are correct. This is an IntelliJ indexing/compilation cache issue.
+
+STEP-BY-STEP FIX:
+
+1. STOP the application if it's running (click the red square stop button)
+
+2. CLOSE IntelliJ IDEA completely
+
+3. DELETE these folders/files (in PowerShell or File Explorer):
+   - backend\.idea
+   - backend\target
+   - (Optional) .idea folder in project root
+
+4. REOPEN IntelliJ IDEA
+
+5. When prompted, select "Open" or "Import Project"
+   - Navigate to: C:\Users\BOOPATHI M\OneDrive\Desktop\project\backend
+   - Select the pom.xml file
+   - Click "Open as Project"
+
+6. Wait for IntelliJ to:
+   - Download dependencies (if needed)
+   - Index files (this may take a few minutes)
+   - Build the project
+
+7. If errors persist after indexing:
+   - File > Invalidate Caches...
+   - Check ALL boxes
+   - Click "Invalidate and Restart"
+
+8. After restart:
+   - Build > Rebuild Project
+   - Wait for compilation to complete
+
+9. Check the Problems panel - errors should be gone
+
+ALTERNATIVE QUICK FIX (if you don't want to close IntelliJ):
+
+1. File > Invalidate Caches...
+2. Check "Clear file system cache and Local History"
+3. Check "Clear downloaded shared indexes"
+4. Click "Invalidate and Restart"
+5. After restart: Build > Rebuild Project
+
+VERIFICATION:
+- All source files exist at:
+  - backend\src\main\java\com\sudharshini\stockmanagement\dto\OrderRequest.java
+  - backend\src\main\java\com\sudharshini\stockmanagement\repository\UserRepository.java
+  - backend\src\main\java\com\sudharshini\stockmanagement\entity\Order.java
+  - backend\src\main\java\com\sudharshini\stockmanagement\entity\User.java
+  - etc.
+
+The source code is CORRECT. This is purely an IntelliJ IDE indexing problem.

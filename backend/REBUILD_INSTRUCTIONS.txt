@@ -1,0 +1,29 @@
+FIX FOR UserRepository COMPILATION ERROR
+==========================================
+
+The error is caused by IntelliJ IDEA using stale compiled classes.
+
+SOLUTION (Do these steps in order):
+
+1. STOP the application if it's running
+
+2. In IntelliJ IDEA:
+   - Go to: File > Invalidate Caches...
+   - Check: "Clear file system cache and Local History"
+   - Click: "Invalidate and Restart"
+   - Wait for IntelliJ to restart
+
+3. After restart:
+   - Go to: Build > Rebuild Project
+   - Wait for compilation to complete
+
+4. If still not working:
+   - Right-click on "backend/pom.xml" in Project tree
+   - Select: Maven > Reload Project
+   - Then: Maven > Lifecycle > clean
+   - Then: Maven > Lifecycle > compile
+   - Then: Build > Rebuild Project
+
+5. Start the application again
+
+The UserRepository.java file exists and is correct. This is purely an IntelliJ build cache issue.

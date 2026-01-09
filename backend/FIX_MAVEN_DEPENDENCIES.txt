@@ -1,0 +1,47 @@
+FIX FOR "package org.springframework.data.jpa.repository does not exist"
+=======================================================================
+
+This error means Maven dependencies are not properly downloaded or IntelliJ hasn't recognized them.
+
+SOLUTION:
+
+1. In IntelliJ IDEA, open the Maven tool window:
+   - View > Tool Windows > Maven
+   - OR click the "Maven" tab on the right side of the IDE
+
+2. In the Maven tool window:
+   - Find your project: "stock-management"
+   - Expand it
+   - Click on "Lifecycle"
+   - Double-click "clean" (wait for it to complete)
+   - Double-click "validate" (this will download dependencies)
+   - Double-click "compile" (this will compile the project)
+
+3. If that doesn't work, reload the Maven project:
+   - Right-click on "stock-management" in the Maven tool window
+   - Select "Reload Project"
+   - Wait for dependencies to download
+
+4. Alternative: Use IntelliJ's Maven reload:
+   - Right-click on "backend/pom.xml" in the Project tree
+   - Select: Maven > Reload Project
+   - Wait for "Indexing..." to complete
+
+5. After dependencies are downloaded:
+   - Build > Rebuild Project
+   - Wait for compilation to complete
+
+6. If still not working, invalidate caches:
+   - File > Invalidate Caches...
+   - Check "Clear file system cache and Local History"
+   - Click "Invalidate and Restart"
+   - After restart: Maven > Reload Project, then Build > Rebuild Project
+
+VERIFICATION:
+The pom.xml file has the correct dependency:
+  <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+  </dependency>
+
+This should automatically include spring-data-jpa. The issue is that IntelliJ hasn't downloaded or recognized the dependencies yet.
