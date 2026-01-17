@@ -113,22 +113,22 @@ export const uploadProductImage = (file) => {
 }
 
 // Auth APIs
-export const googleLogin = (data) => api.post('/auth/customer/google', data)
-export const customerLogin = (data) => api.post('/auth/customer/login', data)
-export const setPassword = (data) => api.post('/auth/customer/set-password', data)
-export const sendOtp = (data) => api.post('/auth/customer/send-otp', data)
-export const verifyOtp = (data) => api.post('/auth/customer/verify-otp', data)
-export const adminLogin = (data) => api.post('/auth/admin/login', data)
-export const getProfile = () => api.get('/auth/profile')
-export const updateProfile = (data) => api.put('/auth/profile', data)
-export const changePassword = (data) => api.post('/auth/change-password', data)
+export const googleLogin = (data) => api.post('/api/auth/customer/google', data)
+export const customerLogin = (data) => api.post('/api/auth/customer/login', data)
+export const setPassword = (data) => api.post('/api/auth/customer/set-password', data)
+export const sendOtp = (data) => api.post('/api/auth/customer/send-otp', data)
+export const verifyOtp = (data) => api.post('/api/auth/customer/verify-otp', data)
+export const adminLogin = (data) => api.post('/api/auth/admin/login', data)
+export const getProfile = () => api.get('/api/auth/profile')
+export const updateProfile = (data) => api.put('/api/auth/profile', data)
+export const changePassword = (data) => api.post('/api/auth/change-password', data)
 
 // Address APIs
-export const getAddresses = () => api.get('/auth/profile/addresses')
-export const addAddress = (data) => api.post('/auth/profile/addresses', data)
-export const updateAddress = (id, data) => api.put(`/auth/profile/addresses/${id}`, data)
-export const deleteAddress = (id) => api.delete(`/auth/profile/addresses/${id}`)
-export const setDefaultAddress = (id) => api.post(`/auth/profile/addresses/${id}/set-default`)
+export const getAddresses = () => api.get('/api/auth/profile/addresses')
+export const addAddress = (data) => api.post('/api/auth/profile/addresses', data)
+export const updateAddress = (id, data) => api.put(`/api/auth/profile/addresses/${id}`, data)
+export const deleteAddress = (id) => api.delete(`/api/auth/profile/addresses/${id}`)
+export const setDefaultAddress = (id) => api.post(`/api/auth/profile/addresses/${id}/set-default`)
 
 // Order APIs
 export const createOrder = (data) => api.post('/orders', data)
@@ -164,16 +164,16 @@ export const getSummary = () => api.get('/reports/summary')
 
 // Admin APIs
 export const createDeliveryMan = (formData) => {
-  return api.post('/auth/admin/create-delivery-man', formData, {
+  return api.post('/api/auth/admin/create-delivery-man', formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
   })
 }
-export const getDeliveryMen = () => api.get('/auth/admin/delivery-men')
-export const updateDeliveryMan = (id, data) => api.put(`/auth/admin/delivery-men/${id}`, data)
-export const deleteDeliveryMan = (id) => api.delete(`/auth/admin/delivery-men/${id}`)
-export const getAllUsers = () => api.get('/auth/admin/users')
+export const getDeliveryMen = () => api.get('/api/auth/admin/delivery-men')
+export const updateDeliveryMan = (id, data) => api.put(`/api/auth/admin/delivery-men/${id}`, data)
+export const deleteDeliveryMan = (id) => api.delete(`/api/auth/admin/delivery-men/${id}`)
+export const getAllUsers = () => api.get('/api/auth/admin/users')
 
 // Delivery Man APIs
 export const getMyDeliveryOrders = () => api.get('/delivery/my-orders')
