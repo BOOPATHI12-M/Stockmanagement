@@ -58,6 +58,13 @@
             <artifactId>hibernate-community-dialects</artifactId>
             <version>6.2.13.Final</version>
         </dependency>
+        
+        <!-- PostgreSQL -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
         <!-- Google Sheets API -->
         <dependency>
