@@ -196,6 +196,11 @@ div[style*="background-color: white"][style*="font-weight: 500"] {
     font-size: 16px;
     color: #fff;
     transition: 0.5s;
+    white-space: nowrap;
+    pointer-events: none;
+    max-width: calc(100% - 30px);
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .input-box input:focus ~ label,
